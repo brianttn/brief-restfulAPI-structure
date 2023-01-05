@@ -24,6 +24,9 @@ const authUsers = [
     }
 ]
 
+/* - - - Parse 「Content-Type：application/json」的「Request Body」資料 - - - */
+app.use(express.json())
+
 /* - - - Apply the「Middleware：userMgrAPI」 on 「route => /apis/admin」 - - - */
 app.use(
     '/apis/admin',
@@ -64,7 +67,7 @@ userMgrAPI.route('/user/:username').get(
     }
 ).post(
     (req, res) => {
-
+        console.log(req.body)
         console.log(`已成功新增使用者${req.params.username}!!`)
         res.end(`Create a new user：${req.params.username}`)
     }
