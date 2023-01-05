@@ -1,0 +1,12 @@
+{
+    "name": "brief-restfulAPI-structure",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+        "start": "nodemon app.js"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}
