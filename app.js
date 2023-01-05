@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000
 const userMgrAPI = express.Router()
 
 /* - - - - - - 授權使用者 - - - - - - */
-const authUsers = [
+let authUsers = [
     {
         name: 'Daniel',
         age: 28,
@@ -23,6 +23,9 @@ const authUsers = [
         country: 'Taiwan',
     }
 ]
+
+/* - - - Parse 「Content-Type：application/json」的「Request Body」資料 - - - */
+app.use(express.json())
 
 /* - - - Apply the「Middleware：userMgrAPI」 on 「route => /apis/admin」 - - - */
 app.use(
@@ -45,7 +48,7 @@ userMgrAPI.use(
             } else {
                 res.end(`重覆註冊使用者!!`)
             }
-        }else{
+        } else {
             if (result == undefined) {
                 res.end(`非授權使用者!!`)
             } else {
@@ -64,19 +67,31 @@ userMgrAPI.route('/user/:username').get(
     }
 ).post(
     (req, res) => {
-
-        console.log(`已成功新增使用者${req.params.username}!!`)
-        res.end(`Create a new user：${req.params.username}`)
+        authUsers.push(req.body)
+        console.log(`已成功新增使用者${req.body.name}!!`)
+        res.end(`新增使用者${req.body.name}的資料如下：\n${JSON.stringify(req.body)}`)
     }
 ).put(
     (req, res) => {
+        const elemIdx = authUsers.findIndex(
+            currElem => currElem.name === req.params.username
+        )
+
+        authUsers[elemIdx] = req.body
+
         console.log(`已成功更新使用者${req.params.username}的資料!!`)
-        res.end(`Update ${req.params.username}'s profile.`)
+        res.end(`使用者${req.body.name}的資料已更新如下：\n${JSON.stringify(authUsers[elemIdx])}`)
     }
 ).delete(
     (req, res) => {
+        const temp = authUsers.filter(
+            currElem => currElem !== req.userObj
+        )
+
+        authUsers = temp
+
         console.log(`已成功刪除使用者${req.params.username}!!`)
-        res.end(`Delete user：${req.params.username}`)
+        res.end(`使用者${req.params.username}的資料已刪除!!`)
     }
 )
 
