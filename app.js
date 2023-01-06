@@ -38,19 +38,31 @@ app.use(
 userMgrAPI.use(
     '/user/:username',
     (req, res, next) => {
+        // If the 「req.body」 is not an empty object
+        if (Object.keys(req.body).length !== 0) {
+            if (req.params.username !== req.body.name) {
+                res.end(`req.params與req.body的使用者名稱有誤!!`)
+            } else {
+                next()
+            }
+        } else {
+            next()
+        }
+    },
+    (req, res, next) => {
         const result = authUsers.find(
             elem => elem.name.toUpperCase() == req.params.username.toUpperCase()
         )
 
-        if (req.method == 'POST') {
-            if (result == undefined) {
+        if (req.method === 'POST') {
+            if (result === undefined) {
                 req.userObj = result
                 next()
             } else {
                 res.end(`重覆註冊使用者!!`)
             }
         } else {
-            if (result == undefined) {
+            if (result === undefined) {
                 res.end(`非授權使用者!!`)
             } else {
                 req.userObj = result
