@@ -1,11 +1,8 @@
 const express = require('express')
-const app = express()
+const app = express()       // Create a express Web Application
 const port = process.env.PORT || 3000
 
-/* - - - Create a 「router(路由器)：userMgrAPI」 - - - */
-const userMgrAPI = express.Router()
-
-/* - - - - - - 授權使用者 - - - - - - */
+/* - - - - - - 預設：授權使用者 - - - - - - */
 let authUsers = [
     {
         name: 'Daniel',
@@ -27,7 +24,11 @@ let authUsers = [
 /* - - - Parse 「Content-Type：application/json」的「Request Body」資料 - - - */
 app.use(express.json())
 
+/* - - - Create a 「router(路由器)：userMgrAPI」 - - - */
+const userMgrAPI = express.Router()
+
 /* - - - Apply the「Middleware：userMgrAPI」 on 「route => /apis/admin」 - - - */
+// 在「route => /apis/admin」上「所有的：HTTP Verbs(Methods)」，都會觸發「Middleware：userMgrAPI」
 app.use(
     '/apis/admin',
     userMgrAPI
@@ -59,7 +60,8 @@ userMgrAPI.use(
     }
 )
 
-/* - - - 指定「Handle：HTTP Verbs(Methods)」的「route => /user/:username」 - - - */
+/* - - - - - - 指定「Handle：HTTP Verbs(Methods)」的「route => /user/:username」 - - - - - - */
+// 在原有的「route => /apis/admin」再「向下綁定」為「route => /apis/admin/user/:username」
 userMgrAPI.route('/user/:username').get(
     (req, res) => {
         console.log(`已成功讀取使用者${req.params.username}的資料!!`)
