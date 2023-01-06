@@ -40,7 +40,7 @@ userMgrAPI.use(
     (req, res, next) => {
         // If the 「req.body」 is not an empty object
         if (Object.keys(req.body).length !== 0) {
-            if (req.params.username !== req.body.name) {
+            if (req.params.username.toUpperCase() !== req.body.name.toUpperCase()) {
                 res.end(`req.params與req.body的使用者名稱有誤!!`)
             } else {
                 next()
@@ -51,7 +51,7 @@ userMgrAPI.use(
     },
     (req, res, next) => {
         const result = authUsers.find(
-            elem => elem.name.toUpperCase() == req.params.username.toUpperCase()
+            elem => elem.name.toUpperCase() === req.params.username.toUpperCase()
         )
 
         if (req.method === 'POST') {
@@ -88,7 +88,7 @@ userMgrAPI.route('/user/:username').get(
 ).put(
     (req, res) => {
         const elemIdx = authUsers.findIndex(
-            currElem => currElem.name === req.params.username
+            currElem => currElem.name.toUpperCase() === req.params.username.toUpperCase()
         )
 
         authUsers[elemIdx] = req.body
